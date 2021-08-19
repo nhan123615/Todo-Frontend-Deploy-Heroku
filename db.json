@@ -1,0 +1,40 @@
+{
+  "tasks": [
+    {
+      "title": "React",
+      "description": "Learning ReactJs",
+      "status": 0,
+      "id": 1
+    },
+    {
+      "title": "Angular",
+      "description": "Learning Angular Framework",
+      "status": 1,
+      "id": 2
+    },
+    {
+      "title": "Vue",
+      "description": "Learning VueJs",
+      "status": 2,
+      "id": 3
+    },
+    {
+      "title": "Spring",
+      "description": "Studying Spring MVC",
+      "status": 0,
+      "id": 4
+    },
+    {
+      "title": "Java OOP",
+      "description": "OOP in Java",
+      "status": 2,
+      "id": 5
+    },
+    {
+      "title": "SpringBoot",
+      "description": "Learning SpringBoot",
+      "status": 1,
+      "id": 6
+    }
+  ]
+}
