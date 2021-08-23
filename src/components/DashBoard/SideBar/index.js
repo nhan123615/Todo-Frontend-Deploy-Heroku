@@ -1,13 +1,13 @@
-import { withStyles } from '@material-ui/core';
-import React, { Component } from 'react';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import { Icon, withStyles } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import propTypes from 'prop-types';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import propTypes from 'prop-types';
+import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { ADMIN_ROUTES } from '../../../consts';
+import { USER_ROUTES } from '../../../consts/routes';
 import styles from './styles';
 
 class SideBar extends Component {
@@ -36,7 +36,7 @@ class SideBar extends Component {
         onKeyDown={this.toggleDrawer(false)}
       >
         <List component="nav">
-          {ADMIN_ROUTES.map((route) => (
+          {USER_ROUTES.map((route) => (
             <NavLink
               key={route.path}
               to={route.path}
@@ -45,7 +45,9 @@ class SideBar extends Component {
               activeClassName={classes.menuLinkActive}
             >
               <ListItem button className={classes.listItem}>
-                <ListItemIcon>{route.icon()}</ListItemIcon>
+                <ListItemIcon>
+                  <Icon color="primary">{route.icon}</Icon>
+                </ListItemIcon>
                 <ListItemText primary={route.name} />
               </ListItem>
             </NavLink>

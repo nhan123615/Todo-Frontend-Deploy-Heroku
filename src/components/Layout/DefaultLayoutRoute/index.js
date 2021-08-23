@@ -6,6 +6,7 @@ import styles from './styles';
 
 class DefaultLayoutRoute extends Component {
   render() {
+    // eslint-disable-next-line react/prop-types
     const { component: YourComponent, ...remainProps } = this.props;
     return (
       <Route
@@ -25,7 +26,6 @@ class DefaultLayoutRoute extends Component {
 DefaultLayoutRoute.propTypes = {
   path: propTypes.string,
   name: propTypes.string,
-  component: propTypes.object,
   exact: propTypes.bool,
 };
 

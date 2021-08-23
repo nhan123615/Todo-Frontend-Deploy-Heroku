@@ -129,10 +129,6 @@ TaskForm.propTypes = {
 
 const mapStateToProps = (state) => ({
   initialValues: state.tasks.taskEditing,
-  // initialValues: {
-  //   title: state.tasks.taskEditing.title,
-  //   description: state.tasks.taskEditing.description,
-  // },
 });
 
 const mapDispatchToProps = (dispatch) => ({

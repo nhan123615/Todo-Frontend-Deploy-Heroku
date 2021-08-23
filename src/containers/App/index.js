@@ -1,26 +1,28 @@
 import { withStyles } from '@material-ui/core';
-import React, { Component } from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
+import React, { Component } from 'react';
 import { Provider } from 'react-redux';
+import { BrowserRouter, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { BrowserRouter, Switch } from 'react-router-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from './../../commons/theme';
-import styles from './../../containers/App/styles';
-import configStore from '../../redux/configStore';
+import { ConnectedRouter } from 'connected-react-router';
 import GlobalLoading from '../../components/GlobalLoading';
-import ModalForm from '../../components/ModalForm';
-import { ADMIN_ROUTES, ROUTES } from '../../consts';
 import AdminLayoutRoute from '../../components/Layout/AdminLayoutRoute';
 import DefaultLayoutRoute from '../../components/Layout/DefaultLayoutRoute';
+import ModalForm from '../../components/ModalForm';
+import { USER_ROUTES, ROUTES } from '../../consts/routes';
+import configStore from '../../redux/configStore';
+import theme from './../../commons/theme';
+import styles from './../../containers/App/styles';
+import { history } from '../../redux/history';
 
 const store = configStore();
 
 class App extends Component {
   renderAdminRoutes = () => {
     let xhtml = null;
-    xhtml = ADMIN_ROUTES.map((route) => {
+    xhtml = USER_ROUTES.map((route) => {
       const { path, name, component, exact } = route;
       return (
         <AdminLayoutRoute
@@ -32,6 +34,7 @@ class App extends Component {
         />
       );
     });
+
     return xhtml;
   };
 
@@ -61,10 +64,12 @@ class App extends Component {
             <ToastContainer />
             <GlobalLoading />
             <ModalForm />
-            <Switch>
-              {this.renderAdminRoutes()}
-              {this.renderDefaultRoutes()}
-            </Switch>
+            <ConnectedRouter history={history}>
+              <Switch>
+                {this.renderAdminRoutes()}
+                {this.renderDefaultRoutes()}
+              </Switch>
+            </ConnectedRouter>
           </ThemeProvider>
         </BrowserRouter>
       </Provider>

@@ -9,6 +9,17 @@ const styles = (theme) => ({
   inputRoot: {
     color: 'inherit',
   },
+
+  title: {
+    textTransform: 'capitalize',
+  },
+
+  sectionDesktop: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon

@@ -2,23 +2,25 @@ import {
   Button,
   Card,
   CardContent,
-  TextField,
-  Typography,
-  FormControlLabel,
-  Checkbox,
-  FormControl,
-  InputLabel,
-  Input,
-  InputAdornment,
   IconButton,
+  InputAdornment,
+  Typography,
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { withStyles } from '@material-ui/styles';
-import React, { Component } from 'react';
 import propTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { bindActionCreators, compose } from 'redux';
+import { Field, reduxForm } from 'redux-form';
+import * as authAction from '../../actions/auth';
+import renderPasswordField from '../../components/FormHelper/PasswordField';
+import renderTextField from '../../components/FormHelper/TextField';
+import * as formConsts from '../../consts/form';
 import styles from './styles';
+import validate from './validate';
 
 class Signup extends Component {
   constructor(props) {
@@ -47,90 +49,89 @@ class Signup extends Component {
     });
   };
 
+  handleSubmitForm = (data) => {
+    const { authActionCreators } = this.props;
+    const { register } = authActionCreators;
+    const { username, password } = data;
+    register({
+      username,
+      password,
+    });
+  };
+
   render() {
-    const { classes } = this.props;
+    const { classes, handleSubmit, invalid, submitting } = this.props;
     const { showPassword, showConfirmPassword } = this.state;
     return (
       <div className={classes.background}>
         <div className={classes.signup}>
           <Card>
             <CardContent className={classes.cardContent}>
-              <form>
+              <form onSubmit={handleSubmit(this.handleSubmitForm)}>
                 <div className="text-xs-center pb-xs">
                   <Typography variant="h3">Register</Typography>
                 </div>
-                <TextField
-                  label="Email"
-                  className={classes.textField}
-                  fullWidth
-                  margin="normal"
-                  name="email"
-                />
-                <FormControl
-                  className={classes.textField}
-                  fullWidth
-                  margin="normal"
-                >
-                  <InputLabel htmlFor="standard-adornment-password">
-                    Password
-                  </InputLabel>
-                  <Input
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={this.handleClickShowPassword}
-                          onMouseDown={this.handleMouseDownPassword}
-                        >
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
 
-                <FormControl
+                <Field
+                  label="Username"
+                  className={classes.textField}
+                  margin="normal"
+                  name="username"
+                  fullWidth
+                  component={renderTextField}
+                />
+
+                <Field
+                  label="Password"
                   className={classes.textField}
                   fullWidth
-                  margin="normal"
-                >
-                  <InputLabel htmlFor="standard-adornment-password">
-                    Confirm Password
-                  </InputLabel>
-                  <Input
-                    name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={this.handleClickShowConfirmPassword}
-                          onMouseDown={this.handleMouseDownPassword}
-                        >
-                          {showConfirmPassword ? (
-                            <Visibility />
-                          ) : (
-                            <VisibilityOff />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-
-                <FormControlLabel
-                  control={<Checkbox value-="agree" />}
-                  label="Already read the lines"
-                  className={classes.fullWidth}
+                  component={renderPasswordField}
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={this.handleClickShowPassword}
+                        onMouseDown={this.handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
                 />
+
+                <Field
+                  label="Confirm Password"
+                  className={classes.textField}
+                  fullWidth
+                  component={renderPasswordField}
+                  name="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={this.handleClickShowConfirmPassword}
+                        onMouseDown={this.handleMouseDownPassword}
+                      >
+                        {showConfirmPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+
                 <Button
                   variant="contained"
                   color="primary"
                   fullWidth
                   type="submit"
                   className={classes.margin}
+                  disabled={invalid || submitting}
                 >
                   Signup
                 </Button>
@@ -147,7 +148,26 @@ class Signup extends Component {
     );
   }
 }
+
 Signup.propTypes = {
   classes: propTypes.object,
+  handleSubmit: propTypes.func,
+  invalid: propTypes.bool,
+  submitting: propTypes.bool,
+  authActionCreators: propTypes.shape({
+    register: propTypes.func,
+  }),
 };
-export default withStyles(styles)(Signup);
+
+const mapStateToProps = null;
+const mapDispatchToProps = (dispatch) => ({
+  authActionCreators: bindActionCreators(authAction, dispatch),
+});
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+const withReduxForm = reduxForm({
+  form: formConsts.SIGNUP_MANAGEMENT,
+  validate,
+});
+
+export default compose(withStyles(styles), withConnect, withReduxForm)(Signup);

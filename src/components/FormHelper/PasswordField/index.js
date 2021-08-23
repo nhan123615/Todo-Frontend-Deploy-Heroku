@@ -2,9 +2,9 @@ import React from 'react';
 import {
   FormControl,
   InputLabel,
-  Select,
   FormHelperText,
   withStyles,
+  Input,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import styles from './styles';
@@ -16,37 +16,36 @@ const renderFromHelper = ({ touched, error }) => {
   return <FormHelperText>{touched && error}</FormHelperText>;
 };
 
-const renderSelectField = ({
+const renderPasswordField = ({
   classes,
   input,
   label,
-  meta: { touched, error },
+  meta: { touched, invalid, error },
   children,
   ...custom
 }) => (
-  <FormControl className={classes.formControl} error={touched && error}>
-    <InputLabel htmlFor="age-native-simple">{label}</InputLabel>
-    <Select
+  <FormControl
+    className={classes.textField}
+    fullWidth
+    margin="normal"
+    // error={touched && error}
+    error={touched && invalid}
+  >
+    <InputLabel htmlFor="standard-adornment-password">{label}</InputLabel>
+    <Input
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...input}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...custom}
-      // inputProps={{
-      //   name: 'age',
-      //   id: 'age-native-simple',
-      // }}
-    >
-      {children}
-    </Select>
+    />
     {renderFromHelper({ touched, error })}
   </FormControl>
 );
 
-renderSelectField.propTypes = {
-  touched: PropTypes.bool,
-  error: PropTypes.string,
+renderPasswordField.propTypes = {
+  meta: PropTypes.object,
   children: PropTypes.array,
   classes: PropTypes.object,
 };
 
-export default withStyles(styles)(renderSelectField);
+export default withStyles(styles)(renderPasswordField);

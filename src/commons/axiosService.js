@@ -15,20 +15,36 @@ class AxiosService {
     return Promise.reject(error);
   }
 
-  get(url) {
-    return this.instance.get(url);
+  // get(url) {
+  //   return this.instance.get(url);
+  // }
+
+  get(url, headers) {
+    return this.instance.get(url, headers);
   }
 
-  post(url, body) {
-    return this.instance.post(url, body);
+  // post(url, body) {
+  //   return this.instance.post(url, body);
+  // }
+
+  post(url, body, headers) {
+    return this.instance.post(url, body, headers);
   }
 
-  put(url, body) {
-    return this.instance.put(url, body);
+  // put(url, body) {
+  //   return this.instance.put(url, body);
+  // }
+
+  put(url, body, headers) {
+    return this.instance.put(url, body, headers);
   }
 
-  delete(url) {
-    return this.instance.delete(url);
+  // delete(url) {
+  //   return this.instance.delete(url);
+  // }
+
+  delete(url, headers) {
+    return this.instance.delete(url, headers);
   }
 }
 

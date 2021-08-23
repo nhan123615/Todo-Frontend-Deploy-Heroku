@@ -1,14 +1,13 @@
 import { withStyles } from '@material-ui/core';
-import React, { Component } from 'react';
-import propTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { compose, bindActionCreators } from 'redux';
 import cn from 'classnames';
-
+import propTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
+import * as uiAction from '../../actions/ui';
 import Header from '../DashBoard/Header';
 import SideBar from '../DashBoard/SideBar';
 import styles from './styles';
-import * as uiAction from '../../actions/ui';
 
 class DashBoard extends Component {
   handleToggleSidebar = (value) => {

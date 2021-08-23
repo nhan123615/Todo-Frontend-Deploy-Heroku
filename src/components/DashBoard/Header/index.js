@@ -7,10 +7,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
-import { compose } from 'redux';
 import propTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { bindActionCreators, compose } from 'redux';
+import * as authAction from '../../../actions/auth';
 import styles from './styles';
 
 const menuId = 'primary-search-account-menu';
@@ -43,8 +45,9 @@ class Header extends Component {
   };
 
   handleLogout = () => {
-    const { history } = this.props;
-    history.push('/login');
+    const { authActionCreators } = this.props;
+    const { logout } = authActionCreators;
+    logout();
   };
 
   renderMenu = () => {
@@ -66,7 +69,7 @@ class Header extends Component {
   };
 
   render() {
-    const { classes, name } = this.props;
+    const { classes, name, username } = this.props;
 
     return (
       <div>
@@ -86,6 +89,9 @@ class Header extends Component {
             </Typography>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
+              <Typography variant="h6" className={classes.title}>
+                {username}
+              </Typography>
               <IconButton
                 edge="end"
                 aria-label="account of current user"
@@ -110,7 +116,19 @@ Header.propTypes = {
   name: propTypes.string,
   showSidebar: propTypes.bool,
   onToggleSidebar: propTypes.func,
-  history: propTypes.object,
+  authActionCreators: propTypes.shape({
+    logout: propTypes.func,
+  }),
+  username: propTypes.string,
 };
 
-export default compose(withRouter, withStyles(styles))(Header);
+const mapStateToProps = (state) => ({
+  username: state.auth.user.username,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  authActionCreators: bindActionCreators(authAction, dispatch),
+});
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(withRouter, withConnect, withStyles(styles))(Header);
