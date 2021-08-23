@@ -18,17 +18,14 @@ class FacebookLoginPage extends Component {
     const { classes } = this.props;
 
     return (
-      <div>
-        a
-        <FacebookLogin
-          appId="1409930916039308"
-          fields="name,email,picture"
-          callback={this.responseFacebook}
-          onClick={this.componentClicked}
-          cssClass={classes.btn}
-          icon={<FacebookIcon className={classes.fbIcon} />}
-        />
-      </div>
+      <FacebookLogin
+        appId="1409930916039308"
+        fields="name,email,picture"
+        callback={this.responseFacebook}
+        onClick={this.componentClicked}
+        cssClass={classes.btn}
+        icon={<FacebookIcon className={classes.fbIcon} />}
+      />
     );
   }
 }
