@@ -27,6 +27,7 @@ import ResetPasswordForm from '../ResetPasswordForm';
 import OAuthLoginPage from './OAuth';
 import styles from './styles';
 import validate from './validate';
+import HighlightedInformation from '../../components/HighlighedInformation';
 
 class LoginPage extends Component {
   constructor(props) {
@@ -126,6 +127,15 @@ class LoginPage extends Component {
                     </Button>
                   </Grid>
                 </Grid>
+
+                <HighlightedInformation>
+                  <b>Facebook Testing Account </b>
+                  <br />
+                  <br />
+                  Email: &nbsp;&nbsp;<b>testing_oqulqma_facebook@tfbnw.net</b>
+                  <br />
+                  Password:&nbsp;&nbsp; <b>nhanle</b>
+                </HighlightedInformation>
 
                 <Button
                   variant="contained"

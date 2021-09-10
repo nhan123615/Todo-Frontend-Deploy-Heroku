@@ -13,7 +13,7 @@ const styles = (theme) => ({
 
   cardContent: {
     padding: '0px 40px',
-    height: 500,
+    height: 600,
     width: 500,
     display: 'flex',
     alignItems: 'center',

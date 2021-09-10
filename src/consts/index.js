@@ -1,5 +1,4 @@
 // export const FRONT_END_SERVER = 'http://localhost:3000';
-// export const FRONT_END_SERVER = 'https://nhanle96todoapp.000webhostapp.com';
 export const FRONT_END_SERVER =
   'https://todo-deploy-fronten-react.herokuapp.com';
 // export const BACK_END_SERVER = 'http://localhost:8080';
