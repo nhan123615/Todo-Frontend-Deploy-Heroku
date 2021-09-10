@@ -5,32 +5,31 @@ import {
   IconButton,
   InputAdornment,
   Typography,
+  withStyles,
 } from '@material-ui/core';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import { withStyles } from '@material-ui/styles';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+import jwt from 'jwt-decode';
 import propTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { bindActionCreators, compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
-import * as authAction from '../../actions/auth';
-import renderCheckboxField from '../../components/FormHelper/CheckboxField';
-import renderPasswordField from '../../components/FormHelper/PasswordField';
-import renderTextField from '../../components/FormHelper/TextField';
-import TermsOfServiceDialog from '../../components/TermsOfServiceDialog';
-import * as formConsts from '../../consts/form';
+import * as authAction from '../../../actions/auth';
+import renderPasswordField from '../../../components/FormHelper/PasswordField';
+import * as formConsts from '../../../consts/form';
+import { ROUTES_PATH_LOGIN } from '../../../consts/routes';
+import { getUrlParameter } from '../../../helpers/getUrlParameter';
 import styles from './styles';
 import validate from './validate';
 
-class Signup extends Component {
+class ResetNewPasswordHandler extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showPassword: false,
       showConfirmPassword: false,
-      openTermsOfServiceDialog: false,
     };
   }
 
@@ -41,10 +40,6 @@ class Signup extends Component {
     });
   };
 
-  handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   handleClickShowConfirmPassword = () => {
     const { showConfirmPassword } = this.state;
     this.setState({
@@ -52,62 +47,36 @@ class Signup extends Component {
     });
   };
 
-  handleSubmitForm = (data) => {
-    const { authActionCreators } = this.props;
-    const { register } = authActionCreators;
-    const { username, password, name } = data;
-    register({
-      username,
-      password,
-      name,
-    });
-  };
-
-  openTermsDialog = (event) => {
+  handleMouseDownPassword = (event) => {
     event.preventDefault();
-    this.setState({
-      openTermsOfServiceDialog: true,
+  };
+
+  handleSubmitForm = (data) => {
+    const { location } = this.props;
+    const { password } = data;
+    const tokenType = getUrlParameter('tokenType', location);
+    const token = getUrlParameter('token', location);
+    const { authActionCreators } = this.props;
+    const { updateNewPassword } = authActionCreators;
+    updateNewPassword({
+      password,
+      token,
+      tokenType,
     });
   };
 
-  closeTermsDialog = () => {
-    this.setState({
-      openTermsOfServiceDialog: false,
-    });
-  };
-
-  render() {
+  renderResetNewPasswordHandler = () => {
     const { classes, handleSubmit, invalid, submitting } = this.props;
-    const { showPassword, showConfirmPassword, openTermsOfServiceDialog } =
-      this.state;
+    const { showPassword, showConfirmPassword } = this.state;
     return (
       <div className={classes.background}>
-        <div className={classes.signup}>
+        <div className={classes.login}>
           <Card>
             <CardContent className={classes.cardContent}>
               <form onSubmit={handleSubmit(this.handleSubmitForm)}>
                 <div className="text-xs-center pb-xs">
-                  <Typography variant="h3">Register</Typography>
+                  <Typography variant="h3">Reset Password</Typography>
                 </div>
-
-                <Field
-                  label="Email Address"
-                  className={classes.textField}
-                  margin="normal"
-                  name="username"
-                  fullWidth
-                  component={renderTextField}
-                  autoFocus
-                />
-
-                <Field
-                  label="Username"
-                  className={classes.textField}
-                  margin="normal"
-                  name="name"
-                  fullWidth
-                  component={renderTextField}
-                />
 
                 <Field
                   label="Password"
@@ -153,30 +122,6 @@ class Signup extends Component {
                   }
                 />
 
-                <Field
-                  name="terms"
-                  component={renderCheckboxField}
-                  label={
-                    <Typography variant="body1">
-                      I agree to the{' '}
-                      <span
-                        className={classes.link}
-                        onClick={this.openTermsDialog}
-                        tabIndex={0}
-                        role="button"
-                        onKeyDown={(event) => {
-                          // For screenreaders listen to space and enter events
-                          if (event.keyCode === 13 || event.keyCode === 32) {
-                            this.openTermsDialog();
-                          }
-                        }}
-                      >
-                        {' '}
-                        terms of service
-                      </span>
-                    </Typography>
-                  }
-                />
                 <Button
                   variant="contained"
                   color="primary"
@@ -185,48 +130,73 @@ class Signup extends Component {
                   className={classes.margin}
                   disabled={invalid || submitting}
                 >
-                  Signup
+                  Reset
                 </Button>
-                <div
-                  className="pt-1 text-md-center"
-                  style={{ marginTop: 10, marginBottom: 30 }}
-                >
-                  <Link to="/login" className={classes.underline}>
-                    <Button color="primary">Already Have Account ?</Button>
-                  </Link>
-                </div>
               </form>
             </CardContent>
           </Card>
         </div>
-        <TermsOfServiceDialog
-          open={openTermsOfServiceDialog}
-          onCloseDialog={this.closeTermsDialog}
-        />
       </div>
+    );
+  };
+
+  render() {
+    const { location } = this.props;
+    const tokenType = getUrlParameter('tokenType', location);
+    const token = getUrlParameter('token', location);
+    if (token && tokenType) {
+      const now = Date.now() / 1000;
+      const resetToken = jwt(token);
+      const { exp: expirationResetToken } = resetToken;
+      if (expirationResetToken < now) {
+        return (
+          <div>
+            {toast.error(
+              'Reset Password Expried, Forgot Password to get a new one!',
+            )}
+            <Redirect
+              to={{
+                pathname: ROUTES_PATH_LOGIN,
+              }}
+            />
+          </div>
+        );
+      }
+      return this.renderResetNewPasswordHandler();
+    }
+    return (
+      <Redirect
+        to={{
+          pathname: ROUTES_PATH_LOGIN,
+        }}
+      />
     );
   }
 }
-
-Signup.propTypes = {
+ResetNewPasswordHandler.propTypes = {
   classes: propTypes.object,
+  location: propTypes.object,
   handleSubmit: propTypes.func,
   invalid: propTypes.bool,
   submitting: propTypes.bool,
   authActionCreators: propTypes.shape({
-    register: propTypes.func,
+    updateNewPassword: propTypes.func,
   }),
 };
 
-const mapStateToProps = null;
 const mapDispatchToProps = (dispatch) => ({
   authActionCreators: bindActionCreators(authAction, dispatch),
 });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+const withConnect = connect(null, mapDispatchToProps);
 
 const withReduxForm = reduxForm({
-  form: formConsts.SIGNUP_MANAGEMENT,
+  form: formConsts.RESET_NEW_PASSWORD_MANAGEMENT,
   validate,
 });
 
-export default compose(withStyles(styles), withConnect, withReduxForm)(Signup);
+export default compose(
+  withReduxForm,
+  withConnect,
+  withStyles(styles),
+)(ResetNewPasswordHandler);

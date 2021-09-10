@@ -1,26 +1,20 @@
 const styles = () => ({
   btn: {
-    fontFamily: ' Roboto, sans-serif',
-    border: '1px solid transparent',
-    borderRadius: '4px',
-    alignItems: 'center',
-    color: '#fff',
-    fontWeight: 500,
-    fontSize: '14px',
-    background: '#3b5998',
-    display: 'inline-flex',
-    padding: '9px',
+    fontFamily: ' Roboto, sans-serif !important',
+    border: '1px solid transparent !important',
+    borderRadius: '4px !important',
+    alignItems: 'center !important',
+    fontWeight: '500 !important',
+    fontSize: '14px !important',
+    display: 'inline-flex !important',
+    padding: '9px !important',
     boxShadow:
-      'rgba(0, 0, 0, 0.24) 0px 2px 2px 0px, rgba(0, 0, 0, 0.24) 0px 0px 1px 0px',
-    textTransform: 'capitalize',
-    width: '90%',
-    textAlign: 'center',
+      'rgba(0, 0, 0, 0.24) 0px 2px 2px 0px, rgba(0, 0, 0, 0.24) 0px 0px 1px 0px !important',
+    width: '90% !important',
+    textAlign: 'center !important',
   },
-
-  fbIcon: {
-    marginRight: 10,
-    borderRadius: '4px',
-    background: '#3b5998',
+  link: {
+    textDecoration: 'none',
   },
 });
 

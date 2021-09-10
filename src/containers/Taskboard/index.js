@@ -1,19 +1,18 @@
-import { withStyles, Box } from '@material-ui/core';
+import { Box, withStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import AddIcon from '@material-ui/icons/Add';
+import propTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import Grid from '@material-ui/core/Grid';
-import propTypes from 'prop-types';
-// eslint-disable-next-line import/no-cycle
-import { STATUSES } from '../../consts';
-import TaskList from '../../components/TaskList';
-import styles from './styles';
-import * as taskAction from '../../actions/task';
 import * as modalAction from '../../actions/modal';
+import * as taskAction from '../../actions/task';
 import SearchBox from '../../components/SearchBox';
+import TaskList from '../../components/TaskList';
+import { STATUSES } from '../../consts';
 import TaskForm from '../TaskForm';
+import styles from './styles';
 
 class Taskboard extends Component {
   componentDidMount() {
@@ -162,6 +161,7 @@ Taskboard.propTypes = {
 
 const mapStateToProps = (state) => ({
   listTasks: state.tasks.listTasks,
+  auth: state.auth,
 });
 const mapDispatchToProps = (dispatch) => ({
   taskActionCreators: bindActionCreators(taskAction, dispatch),

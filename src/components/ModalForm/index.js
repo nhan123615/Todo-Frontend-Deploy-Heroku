@@ -1,18 +1,22 @@
-import React, { Component } from 'react';
-import { withStyles, Modal } from '@material-ui/core';
+import { Modal, withStyles } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Clear';
 import propTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
 import * as modalAction from '../../actions/modal';
 import styles from './styles';
 
 class ModalForm extends Component {
   render() {
-    const { open, classes, modalActionCreators, title, component } = this.props;
+    const { open, classes, modalActionCreators, title, component, location } =
+      this.props;
+    const { pathname } = location;
     const { hideModal } = modalActionCreators;
+
     return (
-      <Modal open={open} onClose={hideModal}>
+      <Modal open={pathname === '/login' ? false : open} onClose={hideModal}>
         <div className={classes.modal}>
           <div className={classes.header}>
             <span className={classes.title}>{title}</span>
@@ -34,6 +38,7 @@ ModalForm.propTypes = {
     hideModal: propTypes.func,
   }),
   component: propTypes.object,
+  location: propTypes.object,
 };
 
 const mapStateToProps = (state) => ({
@@ -48,4 +53,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withStyles(styles), withConnect)(ModalForm);
+export default compose(withRouter, withStyles(styles), withConnect)(ModalForm);

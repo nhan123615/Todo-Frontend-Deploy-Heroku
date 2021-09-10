@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   CardContent,
+  Grid,
   IconButton,
   InputAdornment,
   Typography,
@@ -17,18 +18,22 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import * as authAction from '../../actions/auth';
+import * as modalAction from '../../actions/modal';
 import renderPasswordField from '../../components/FormHelper/PasswordField';
 import renderTextField from '../../components/FormHelper/TextField';
 import * as formConsts from '../../consts/form';
+import { ROUTES_PATH_SIGNUP } from '../../consts/routes';
+import ResetPasswordForm from '../ResetPasswordForm';
+import OAuthLoginPage from './OAuth';
 import styles from './styles';
 import validate from './validate';
-import OAuthLoginPage from './OAuth';
 
 class LoginPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showPassword: false,
+      showForgotPasswordForm: false,
     };
   }
 
@@ -54,9 +59,16 @@ class LoginPage extends Component {
     });
   };
 
+  handleForgotPassword = () => {
+    const { showForgotPasswordForm } = this.state;
+    this.setState({
+      showForgotPasswordForm: !showForgotPasswordForm,
+    });
+  };
+
   render() {
     const { classes, handleSubmit, invalid, submitting } = this.props;
-    const { showPassword } = this.state;
+    const { showPassword, showForgotPasswordForm } = this.state;
     return (
       <div className={classes.background}>
         <div className={classes.login}>
@@ -68,7 +80,7 @@ class LoginPage extends Component {
                 </div>
 
                 <Field
-                  label="Username"
+                  label="Email Address"
                   className={classes.textField}
                   margin="normal"
                   name="username"
@@ -95,6 +107,26 @@ class LoginPage extends Component {
                     </InputAdornment>
                   }
                 />
+                <Grid container justifyContent="center">
+                  <Grid item md={6} className={classes.itemLeft}>
+                    <Link
+                      to={ROUTES_PATH_SIGNUP}
+                      className={classes.linkRegister}
+                    >
+                      <Button color="primary">Register New Account</Button>
+                    </Link>
+                  </Grid>
+                  <Grid item md={6} className={classes.itemRight}>
+                    <Button
+                      color="secondary"
+                      className={classes.forgot}
+                      onClick={this.handleForgotPassword}
+                    >
+                      Forgot Password?
+                    </Button>
+                  </Grid>
+                </Grid>
+
                 <Button
                   variant="contained"
                   color="primary"
@@ -106,15 +138,14 @@ class LoginPage extends Component {
                   Login
                 </Button>
                 <OAuthLoginPage />
-                <div className="pt-1 text-md-center">
-                  <Link to="/signup">
-                    <Button>Register New Account</Button>
-                  </Link>
-                </div>
               </form>
             </CardContent>
           </Card>
         </div>
+        <ResetPasswordForm
+          open={showForgotPasswordForm}
+          onToggleForm={this.handleForgotPassword}
+        />
       </div>
     );
   }
@@ -127,6 +158,12 @@ LoginPage.propTypes = {
   authActionCreators: propTypes.shape({
     login: propTypes.func,
   }),
+  modalActionCreators: propTypes.shape({
+    showModal: propTypes.func,
+    changeModalTitle: propTypes.func,
+    changeModalContent: propTypes.func,
+    hideModal: propTypes.func,
+  }),
 };
 
 const mapStateToProps = (state) => ({
@@ -135,6 +172,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   authActionCreators: bindActionCreators(authAction, dispatch),
+  modalActionCreators: bindActionCreators(modalAction, dispatch),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

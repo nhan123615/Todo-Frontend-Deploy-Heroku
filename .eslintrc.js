@@ -34,6 +34,7 @@ module.exports = {
     'react/jsx-uses-vars': 2,
     'react/jsx-closing-bracket-location': 1,
     'react/jsx-first-prop-new-line': 1,
+    'import/no-cycle': 0,
     'prettier/prettier': [
       'error',
       {

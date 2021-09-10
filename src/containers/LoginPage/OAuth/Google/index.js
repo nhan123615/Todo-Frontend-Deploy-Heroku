@@ -1,27 +1,22 @@
 import { withStyles } from '@material-ui/styles';
 import propTypes from 'prop-types';
 import React, { Component } from 'react';
-import GoogleLogin from 'react-google-login';
+import { withRouter } from 'react-router-dom';
+import { GoogleLoginButton } from 'react-social-login-buttons';
+import { compose } from 'redux';
+import { LOGIN_WITH_GOOGLE_PATH } from '../../../../consts/auth';
 import styles from './styles';
 
 class GoogleLoginPage extends Component {
-  responseGoogle = (response) => {
-    console.log(response);
-    console.log(response.profileObj);
+  handleClick = () => {
+    window.location.href = LOGIN_WITH_GOOGLE_PATH;
   };
 
   render() {
     const { classes } = this.props;
 
     return (
-      <GoogleLogin
-        clientId="39062008570-c34cgpj473os4qepe6shacu12j66unef.apps.googleusercontent.com"
-        buttonText="Login With Google"
-        onSuccess={this.responseGoogle}
-        onFailure={this.responseGoogle}
-        cookiePolicy="single_host_origin"
-        className={classes.btn}
-      />
+      <GoogleLoginButton className={classes.btn} onClick={this.handleClick} />
     );
   }
 }
@@ -29,4 +24,4 @@ GoogleLoginPage.propTypes = {
   classes: propTypes.object,
 };
 
-export default withStyles(styles)(GoogleLoginPage);
+export default compose(withRouter, withStyles(styles))(GoogleLoginPage);

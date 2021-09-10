@@ -1,21 +1,21 @@
 import { withStyles } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { ConnectedRouter } from 'connected-react-router';
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ConnectedRouter } from 'connected-react-router';
 import GlobalLoading from '../../components/GlobalLoading';
 import AdminLayoutRoute from '../../components/Layout/AdminLayoutRoute';
 import DefaultLayoutRoute from '../../components/Layout/DefaultLayoutRoute';
 import ModalForm from '../../components/ModalForm';
-import { USER_ROUTES, ROUTES } from '../../consts/routes';
+import { ROUTES, USER_ROUTES } from '../../consts/routes';
 import configStore from '../../redux/configStore';
+import { history } from '../../redux/history';
 import theme from './../../commons/theme';
 import styles from './../../containers/App/styles';
-import { history } from '../../redux/history';
 
 const store = configStore();
 

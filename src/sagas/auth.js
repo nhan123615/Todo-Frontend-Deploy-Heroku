@@ -1,4 +1,5 @@
 import { push, replace } from 'connected-react-router';
+import jwt from 'jwt-decode';
 import { call, delay, put, select } from 'redux-saga/effects';
 import {
   loginFail,
@@ -8,10 +9,19 @@ import {
   refreshTokenSuccess,
   registerFail,
   registerSuccess,
-  verifyToken,
+  resetPasswordFail,
+  resetPasswordSuccess,
+  updateNewPasswordFail,
+  updateNewPasswordSuccess,
 } from '../actions/auth';
 import { hideLoading, showLoading } from '../actions/ui';
-import { login, refreshToken, register } from '../apis/auth';
+import {
+  login,
+  refreshToken,
+  register,
+  resetPassword,
+  updateNewPassword,
+} from '../apis/auth';
 import { STATUS_CODE } from '../consts';
 import {
   ROUTES_PATH_LOGIN,
@@ -63,24 +73,22 @@ export function* registerSaga({ payload }) {
 // verify
 
 export function* verifyTokenSaga() {
-  const tokens = yield select((state) => state.auth.tokens);
+  const tokens = JSON.parse(localStorage.getItem('tokens'));
   if (tokens) {
-    yield put(verifyToken());
-    const isAccessTokenValid = yield select(
-      (state) => state.auth.isAccessTokenValid,
-    );
-    const isRefreshTokenValid = yield select(
-      (state) => state.auth.isRefreshTokenValid,
-    );
+    const accessTokenInfo = jwt(tokens.accessToken);
+    const { exp: expAccessToken } = accessTokenInfo;
+    const refreshTokenInfo = jwt(tokens.refreshToken);
+    const { exp: expRefreshToken } = refreshTokenInfo;
+    const now = Date.now() / 1000;
 
-    if (!isAccessTokenValid && isRefreshTokenValid) {
-      yield call(refreshTokenSaga);
-    } else if (!isAccessTokenValid && !isRefreshTokenValid) {
+    if (expRefreshToken < now) {
       yield put(logout());
-      return false;
+    }
+
+    if (expAccessToken < now && expRefreshToken > now) {
+      yield call(refreshTokenSaga);
     }
   }
-  return true;
 }
 
 // refresh token
@@ -100,8 +108,48 @@ export function* refreshTokenSaga() {
     const { status, data } = resp;
     if (status === STATUS_CODE.SUCCESS) {
       yield put(refreshTokenSuccess(data));
-    } else {
-      yield put(refreshTokenFail(data));
     }
+    yield put(refreshTokenFail(data));
   }
+}
+
+// reset password
+export function* resetPasswordSaga({ payload }) {
+  yield put(showLoading());
+  const resp = yield call(resetPassword, payload.data);
+  const { status, data } = resp;
+
+  if (status === STATUS_CODE.SUCCESS) {
+    yield put(resetPasswordSuccess(data));
+    yield put(push(ROUTES_PATH_LOGIN));
+  } else {
+    yield put(resetPasswordFail(data));
+  }
+  yield delay(500);
+  yield put(hideLoading());
+}
+
+// update new password
+export function* updateNewPasswordSaga({ payload }) {
+  const { password, tokenType, token } = payload.data;
+  yield put(showLoading());
+  const resp = yield call(
+    updateNewPassword,
+    { password },
+    {
+      headers: {
+        Authorization: `${tokenType} ${token}`,
+      },
+    },
+  );
+  const { status, data } = resp;
+
+  if (status === STATUS_CODE.SUCCESS) {
+    yield put(updateNewPasswordSuccess(data));
+  } else {
+    yield put(updateNewPasswordFail(data));
+  }
+  yield delay(500);
+  yield put(hideLoading());
+  yield put(push(ROUTES_PATH_LOGIN));
 }

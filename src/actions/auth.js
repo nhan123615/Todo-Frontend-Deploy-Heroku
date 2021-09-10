@@ -1,6 +1,7 @@
 import * as authConsts from '../consts/auth';
 
 // login
+
 export const login = (user) => ({
   type: authConsts.LOGIN,
   payload: { user },
@@ -55,5 +56,37 @@ export const refreshTokenSuccess = (data) => ({
 
 export const refreshTokenFail = (error) => ({
   type: authConsts.REFRESH_TOKEN_FAIL,
+  payload: { error },
+});
+
+// reset password
+export const resetPassword = (data) => ({
+  type: authConsts.RESET_PASSWORD,
+  payload: { data },
+});
+
+export const resetPasswordSuccess = (data) => ({
+  type: authConsts.RESET_PASSWORD_SUCCESS,
+  payload: { data },
+});
+
+export const resetPasswordFail = (error) => ({
+  type: authConsts.RESET_PASSWORD_FAIL,
+  payload: { error },
+});
+
+// update new password
+export const updateNewPassword = (data) => ({
+  type: authConsts.UPDATE_NEW_PASSWORD,
+  payload: { data },
+});
+
+export const updateNewPasswordSuccess = (data) => ({
+  type: authConsts.UPDATE_NEW_PASSWORD_SUCCESS,
+  payload: { data },
+});
+
+export const updateNewPasswordFail = (error) => ({
+  type: authConsts.UPDATE_NEW_PASSWORD_FAIL,
   payload: { error },
 });

@@ -123,7 +123,7 @@ Header.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  username: state.auth.user.username,
+  username: state.auth.user.name,
 });
 
 const mapDispatchToProps = (dispatch) => ({

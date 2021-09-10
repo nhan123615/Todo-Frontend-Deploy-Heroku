@@ -13,7 +13,7 @@ const styles = (theme) => ({
 
   cardContent: {
     padding: 40,
-    height: 500,
+    height: 550,
     width: 500,
     display: 'flex',
     alignItems: 'center',
@@ -21,6 +21,25 @@ const styles = (theme) => ({
 
   margin: {
     marginTop: 20,
+  },
+
+  underline: {
+    textDecoration: 'none',
+  },
+
+  link: {
+    transition: theme.transitions.create(['background-color'], {
+      duration: theme.transitions.duration.complex,
+      easing: theme.transitions.easing.easeInOut,
+    }),
+    cursor: 'pointer',
+    color: '#b3294e',
+    '&:enabled:hover': {
+      color: theme.palette.primary.dark,
+    },
+    '&:enabled:focus': {
+      color: theme.palette.primary.dark,
+    },
   },
 });
 
